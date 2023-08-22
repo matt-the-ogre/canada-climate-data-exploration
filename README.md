@@ -18,3 +18,9 @@ mv "Station Inventory EN.csv" "data/stations.csv"
 # remove the first three lines of metadata to make it a pure CSV file
 sed -i '.bak' '1,3d' data/stations.csv
 ```
+
+Get the stations in BC that have hourly data in 2023:
+
+```bash
+python3 print-current-stations-bc-hourly.py > current-stations-bc-hourly.csv
+```

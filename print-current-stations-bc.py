@@ -16,12 +16,18 @@ AND \"Province\" = 'BRITISH COLUMBIA'
 # Execute the query
 cursor.execute(query)
 
+# Get column names
+column_names = [description[0] for description in cursor.description]
+
+# Print the column names as a comma-separated string
+print(','.join(column_names))
+
 # Fetch all the matching records
 records = cursor.fetchall()
 
-# Print the records
+# Print the records as comma-separated values
 for record in records:
-    print(record)
+    print(','.join(map(str, record)))
 
 # Close the cursor and connection
 cursor.close()
