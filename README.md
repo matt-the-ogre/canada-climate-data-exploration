@@ -14,7 +14,7 @@ for year in `seq 1998 2008`;do for month in `seq 1 12`;do wget --content-disposi
 
 ```bash
 wget "https://collaboration.cmc.ec.gc.ca/cmc/climate/Get_More_Data_Plus_de_donnees/Station%20Inventory%20EN.csv"
-# remove the first three lines of metadata to make it a pure CSV file
 mv "Station Inventory EN.csv" "data/stations.csv"
+# remove the first three lines of metadata to make it a pure CSV file
 sed -i '.bak' '1,3d' data/stations.csv
 ```
