@@ -6,8 +6,5 @@ __pycache__
 __blob*
 __cache*
 /update-database-daily/last_update_time.txt
-
 update-database-daily/last_update_time.txt
-scripts/scp-mpb13.sh
-/scripts/scp-mpb13.sh
 update-database-daily/last_update_time.txt
