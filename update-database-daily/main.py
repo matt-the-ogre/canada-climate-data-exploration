@@ -26,9 +26,10 @@ def print_jobs():
 
 def main():
     # Schedule the daily update to run at a specific time (e.g., 2:00 AM)
-    debug = True
+    debug = False
 
     schedule.every().day.at("09:00").do(daily_update)
+    schedule.every().day.at("18:00").do(daily_update)
     if debug:
         schedule.every().minute.do(daily_update)
 

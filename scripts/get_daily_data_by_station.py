@@ -5,6 +5,11 @@ import os
 import requests
 
 def get_daily_data_years(database_path, station_id):
+    # Check if the database file is present
+    if not os.path.exists(database_path):
+        logging.error("Error: '{database_path}' file not found. Aborting update.")
+        return
+
     # Connect to the SQLite database
     conn = sqlite3.connect(database_path)
 
@@ -40,7 +45,7 @@ def download_station_data(station_id, year, month, timeframe):
     url = f"https://climate.weather.gc.ca/climate_data/bulk_data_e.html?format=csv&stationID={station_id}&Year={year}&Month={month}&Day=14&timeframe={timeframe}&submit=Download+Data"
 
     # Define the directory path
-    directory_path = os.path.join("data", str(station_id))
+    directory_path = os.path.join("../data", str(station_id))
 
     # Ensure the directory exists
     os.makedirs(directory_path, exist_ok=True)
@@ -81,7 +86,7 @@ def main(args):
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Retrieve daily data years for a given station ID.")
     parser.add_argument('station_id', type=int, help="Station ID to look up")
-    parser.add_argument('--database_path', type=str, default='data/database.db', help="Path to the SQLite database")
+    parser.add_argument('--database_path', type=str, default='../data/database.db', help="Path to the SQLite database")
     return parser.parse_args()
 
 if __name__ == '__main__':

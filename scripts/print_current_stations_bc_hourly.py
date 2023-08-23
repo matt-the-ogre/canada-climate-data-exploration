@@ -1,7 +1,7 @@
 import sqlite3
 
 # Connect to the SQLite database
-conn = sqlite3.connect('data/database.db')
+conn = sqlite3.connect('../data/database.db')
 
 # Create a cursor object to execute SQL queries
 cursor = conn.cursor()

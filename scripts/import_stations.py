@@ -6,7 +6,7 @@ import requests
 import os
 
 # Function to download the stations file
-def download_stations_file(url, directory='data'):
+def download_stations_file(url, directory='../data'):
     # Ensure the directory exists
     os.makedirs(directory, exist_ok=True)
 
@@ -101,7 +101,7 @@ def main(args):
     df['MLY Last Year'] = df['MLY Last Year'].astype(int)
 
     # Connect to the SQLite database (or create it if it doesn't exist)
-    conn = sqlite3.connect('data/database.db')
+    conn = sqlite3.connect('../data/database.db')
 
     # Get the number of stations before the import
     before_count = get_station_count(conn)

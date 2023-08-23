@@ -82,9 +82,9 @@
 # python3 get_daily_data_by_station.py 1041
 # python3 get_daily_data_by_station.py 1046
 # python3 get_daily_data_by_station.py 1056
-python3 get_daily_data_by_station.py 1070
-python3 get_daily_data_by_station.py 1091
-python3 get_daily_data_by_station.py 1095
+# python3 get_daily_data_by_station.py 1070
+# python3 get_daily_data_by_station.py 1091
+# python3 get_daily_data_by_station.py 1095
 python3 get_daily_data_by_station.py 1100
 python3 get_daily_data_by_station.py 1105
 python3 get_daily_data_by_station.py 1106

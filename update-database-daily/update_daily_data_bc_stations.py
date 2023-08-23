@@ -50,7 +50,7 @@ def download_new_data(climate_id, station_id, start_date):
     response.raise_for_status()
     
     # Path to the downloaded CSV file
-    file_path = os.path.join("data", f"{climate_id}_{station_id}_new_data.csv")
+    file_path = os.path.join("../data", f"{climate_id}_{station_id}_new_data.csv")
     
     # Save the CSV file
     with open(file_path, 'wb') as file:

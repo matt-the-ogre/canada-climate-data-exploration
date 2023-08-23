@@ -7,10 +7,10 @@ import argparse
 
 def import_csv_files(station_id):
     # Connect to the SQLite database
-    conn = sqlite3.connect('data/database.db')
+    conn = sqlite3.connect('../data/database.db')
 
     # Directory path containing the CSV files for the given station ID
-    directory_path = os.path.join("data", str(station_id))
+    directory_path = os.path.join("../data", str(station_id))
 
     # Pattern to match the CSV files
     pattern = os.path.join(directory_path, "en_climate_daily_BC_*_P1D.csv")
