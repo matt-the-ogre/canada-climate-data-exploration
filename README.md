@@ -35,3 +35,11 @@ LIMIT 1;
 ```
 
 Interesting that on August 22, 2023 the last data point with not null data quality is June 27, 2023. How often are these CSV files updated?
+
+Find the list of stations in BC with a Daily First Year not null
+
+```sql
+SELECT "Station ID" FROM stations
+WHERE "Province" = 'BRITISH COLUMBIA'
+AND "DLY First Year" IS NOT NULL;
+```
