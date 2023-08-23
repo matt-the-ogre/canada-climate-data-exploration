@@ -61,7 +61,7 @@ def download_station_data(station_id, year, month, timeframe):
         file.write(response.content)
 
     logging.info(f"Downloaded file for station {station_id}, year {year}, month {month} to '{file_path}'.")
-
+    return file_path
 
 def main(args):
     # need to handle case where years are not available (0,0)

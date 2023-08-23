@@ -2,3 +2,4 @@
 .DS_Store
 *.db
 __azur*
+__pycache__
