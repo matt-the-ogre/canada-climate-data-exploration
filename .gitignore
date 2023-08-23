@@ -3,3 +3,4 @@
 *.db
 __azur*
 __pycache__
+__blob*
