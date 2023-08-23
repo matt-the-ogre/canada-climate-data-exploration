@@ -24,3 +24,14 @@ Get the stations in BC that have hourly data in 2023:
 ```bash
 python3 print-current-stations-bc-hourly.py > current-stations-bc-hourly.csv
 ```
+
+Find the last data point with not null data quality:
+
+```sql
+SELECT "Year", "Month", "Day"
+FROM "1011500_26_daily" WHERE "Data Quality" IS NOT NULL
+ORDER BY "Date/Time" DESC
+LIMIT 1;
+```
+
+Interesting that on August 22, 2023 the last data point with not null data quality is June 27, 2023. How often are these CSV files updated?

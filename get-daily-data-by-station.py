@@ -64,6 +64,8 @@ def download_station_data(station_id, year, month, timeframe):
 
 
 def main(args):
+    # need to handle case where years are not available (0,0)
+    # How do you do this with variable return values?
     name, province, first_year, last_year = get_daily_data_years(args.database_path, args.station_id)
     logging.info(f"daily data available for station {args.station_id} ({name}, {province}): {first_year} to {last_year}")
     
