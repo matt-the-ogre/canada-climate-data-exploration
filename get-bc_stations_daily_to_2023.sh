@@ -54,34 +54,34 @@
 # python3 get_daily_data_by_station.py 424
 # python3 get_daily_data_by_station.py 442
 # python3 get_daily_data_by_station.py 446
-python3 get_daily_data_by_station.py 450
-python3 get_daily_data_by_station.py 470
-python3 get_daily_data_by_station.py 536
-python3 get_daily_data_by_station.py 568
-python3 get_daily_data_by_station.py 574
-python3 get_daily_data_by_station.py 617
-python3 get_daily_data_by_station.py 650
-python3 get_daily_data_by_station.py 706
-python3 get_daily_data_by_station.py 707
-python3 get_daily_data_by_station.py 747
-python3 get_daily_data_by_station.py 766
-python3 get_daily_data_by_station.py 810
-python3 get_daily_data_by_station.py 823
-python3 get_daily_data_by_station.py 833
-python3 get_daily_data_by_station.py 834
-python3 get_daily_data_by_station.py 837
-python3 get_daily_data_by_station.py 844
-python3 get_daily_data_by_station.py 853
-python3 get_daily_data_by_station.py 870
-python3 get_daily_data_by_station.py 888
-python3 get_daily_data_by_station.py 924
-python3 get_daily_data_by_station.py 925
-python3 get_daily_data_by_station.py 951
-python3 get_daily_data_by_station.py 979
-python3 get_daily_data_by_station.py 1022
-python3 get_daily_data_by_station.py 1041
-python3 get_daily_data_by_station.py 1046
-python3 get_daily_data_by_station.py 1056
+# python3 get_daily_data_by_station.py 450
+# python3 get_daily_data_by_station.py 470
+# python3 get_daily_data_by_station.py 536
+# python3 get_daily_data_by_station.py 568
+# python3 get_daily_data_by_station.py 574
+# python3 get_daily_data_by_station.py 617
+# python3 get_daily_data_by_station.py 650
+# python3 get_daily_data_by_station.py 706
+# python3 get_daily_data_by_station.py 707
+# python3 get_daily_data_by_station.py 747
+# python3 get_daily_data_by_station.py 766
+# python3 get_daily_data_by_station.py 810
+# python3 get_daily_data_by_station.py 823
+# python3 get_daily_data_by_station.py 833
+# python3 get_daily_data_by_station.py 834
+# python3 get_daily_data_by_station.py 837
+# python3 get_daily_data_by_station.py 844
+# python3 get_daily_data_by_station.py 853
+# python3 get_daily_data_by_station.py 870
+# python3 get_daily_data_by_station.py 888
+# python3 get_daily_data_by_station.py 924
+# python3 get_daily_data_by_station.py 925
+# python3 get_daily_data_by_station.py 951
+# python3 get_daily_data_by_station.py 979
+# python3 get_daily_data_by_station.py 1022
+# python3 get_daily_data_by_station.py 1041
+# python3 get_daily_data_by_station.py 1046
+# python3 get_daily_data_by_station.py 1056
 python3 get_daily_data_by_station.py 1070
 python3 get_daily_data_by_station.py 1091
 python3 get_daily_data_by_station.py 1095

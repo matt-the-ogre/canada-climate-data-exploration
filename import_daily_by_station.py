@@ -7,7 +7,7 @@ import argparse
 
 def import_csv_files(station_id):
     # Connect to the SQLite database
-    conn = sqlite3.connect('database.db')
+    conn = sqlite3.connect('data/database.db')
 
     # Directory path containing the CSV files for the given station ID
     directory_path = os.path.join("data", str(station_id))
@@ -45,7 +45,7 @@ def main(args):
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Retrieve hourly data years for a given station ID.")
     parser.add_argument('station_id', type=int, help="Station ID to look up")
-    parser.add_argument('--database_path', type=str, default='database.db', help="Path to the SQLite database")
+    parser.add_argument('--database_path', type=str, default='data/database.db', help="Path to the SQLite database")
     return parser.parse_args()
 
 if __name__ == '__main__':

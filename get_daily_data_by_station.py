@@ -4,18 +4,18 @@ import argparse
 import os
 import requests
 
-def get_hourly_data_years(database_path, station_id):
+def get_daily_data_years(database_path, station_id):
     # Connect to the SQLite database
     conn = sqlite3.connect(database_path)
 
     # Create a cursor object to execute SQL queries
     cursor = conn.cursor()
 
-    # SQL query to retrieve "HLY First Year" and "HLY Last Year" for the given station ID
+    # SQL query to retrieve "DLY First Year" and "DLY Last Year" for the given station ID
     query = """
-    SELECT "Name", "Province", "HLY First Year", "HLY Last Year"
+    SELECT "Name", "Province", "DLY First Year", "DLY Last Year"
     FROM stations
-    WHERE "Station ID" = ? AND "HLY First Year" IS NOT NULL
+    WHERE "Station ID" = ? AND "DLY First Year" IS NOT NULL
     """
 
     # Execute the query with the provided station ID
@@ -40,7 +40,7 @@ def download_station_data(station_id, year, month, timeframe):
     url = f"https://climate.weather.gc.ca/climate_data/bulk_data_e.html?format=csv&stationID={station_id}&Year={year}&Month={month}&Day=14&timeframe={timeframe}&submit=Download+Data"
 
     # Define the directory path
-    directory_path = os.path.join("data", str(station_id), str(year))
+    directory_path = os.path.join("data", str(station_id))
 
     # Ensure the directory exists
     os.makedirs(directory_path, exist_ok=True)
@@ -61,25 +61,25 @@ def download_station_data(station_id, year, month, timeframe):
         file.write(response.content)
 
     logging.info(f"Downloaded file for station {station_id}, year {year}, month {month} to '{file_path}'.")
-
+    return file_path
 
 def main(args):
-    name, province, first_year, last_year = get_hourly_data_years(args.database_path, args.station_id)
-    logging.info(f"Hourly data available for station {args.station_id} ({name}, {province}): {first_year} to {last_year}")
+    # need to handle case where years are not available (0,0)
+    # How do you do this with variable return values?
+    name, province, first_year, last_year = get_daily_data_years(args.database_path, args.station_id)
+    logging.info(f"daily data available for station {args.station_id} ({name}, {province}): {first_year} to {last_year}")
     
     # Example usage
     station_id = args.station_id
-    # year = first_year
-    # month = 1
-    timeframe = 1 # 1 = hourly, 2 = daily, 3 = monthly
+    timeframe = 2 # 1 = daily, 2 = daily, 3 = monthly
+    month = 1 # doesn't matter for daily data
 
     for year in range(first_year, last_year + 1):
-        for month in range(1, 13):
-            download_station_data(station_id, year, month, timeframe)
+        download_station_data(station_id, year, month, timeframe)
 
 
 def parse_arguments():
-    parser = argparse.ArgumentParser(description="Retrieve hourly data years for a given station ID.")
+    parser = argparse.ArgumentParser(description="Retrieve daily data years for a given station ID.")
     parser.add_argument('station_id', type=int, help="Station ID to look up")
     parser.add_argument('--database_path', type=str, default='data/database.db', help="Path to the SQLite database")
     return parser.parse_args()

@@ -101,7 +101,7 @@ def main(args):
     df['MLY Last Year'] = df['MLY Last Year'].astype(int)
 
     # Connect to the SQLite database (or create it if it doesn't exist)
-    conn = sqlite3.connect('database.db')
+    conn = sqlite3.connect('data/database.db')
 
     # Get the number of stations before the import
     before_count = get_station_count(conn)
