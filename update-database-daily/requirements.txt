@@ -3,3 +3,5 @@ pandas
 requests
 datetime
 argparse
+mysql-connector-python
+sqlalchemy
