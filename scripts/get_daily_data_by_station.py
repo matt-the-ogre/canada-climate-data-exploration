@@ -3,6 +3,7 @@ import logging
 import argparse
 import os
 import requests
+import time
 
 def get_daily_data_years(database_path, station_id):
     # Check if the database file is present
@@ -76,11 +77,12 @@ def main(args):
     
     # Example usage
     station_id = args.station_id
-    timeframe = 2 # 1 = daily, 2 = daily, 3 = monthly
+    timeframe = 2 # 1 = hourly, 2 = daily, 3 = monthly
     month = 1 # doesn't matter for daily data
 
     for year in range(first_year, last_year + 1):
         download_station_data(station_id, year, month, timeframe)
+        time.sleep(1) # sleep for 1 second to avoid overloading the server
 
 
 def parse_arguments():
