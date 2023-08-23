@@ -4,6 +4,7 @@ from datetime import datetime
 import logging
 import os
 from update_daily_data_bc_stations import update_database_daily
+import argparse
 
 def daily_update():
     logging.info("Daily update run.")
@@ -24,9 +25,9 @@ def print_jobs():
     for job in schedule.jobs:
         logging.info(f"Job: {job.job_func} , Next run: {job.next_run}")
 
-def main():
+def main(args):
     # Schedule the daily update to run at a specific time (e.g., 2:00 AM)
-    debug = False
+    debug = args.debug
 
     schedule.every().day.at("09:00").do(daily_update)
     schedule.every().day.at("18:00").do(daily_update)
@@ -37,12 +38,22 @@ def main():
     if debug:
         print_jobs()
 
+    if debug:
+        daily_update()
+    
     # Keep the script running to allow the scheduled job to execute
     while True:
         schedule.run_pending()
         time.sleep(10)
 
+def parse_arguments():
+    parser = argparse.ArgumentParser(description="Update the database with the latest data from BC stations")
+    # parser.add_argument('station_id', type=int, help="Station ID to look up")
+    parser.add_argument('--debug', type=bool, default=False, help="Run in debug mode")
+    return parser.parse_args()
+
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
     logging.debug(f"main start time: {datetime.now()}")
-    main()
+    args = parse_arguments()
+    main(args)
