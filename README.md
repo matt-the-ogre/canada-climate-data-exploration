@@ -43,3 +43,33 @@ SELECT "Station ID" FROM stations
 WHERE "Province" = 'BRITISH COLUMBIA'
 AND "DLY First Year" IS NOT NULL;
 ```
+
+## More from the Climate website
+
+[Source file](https://collaboration.cmc.ec.gc.ca/cmc/climate/Get_More_Data_Plus_de_donnees/Command_Lines_EN.txt)
+
+Hourly data interval:
+
+```bash
+for year in `seq 1998 2008`;do for month in `seq 1 12`;do wget --content-disposition "https://climate.weather.gc.ca/climate_data/bulk_data_e.html?format=csv&stationID=1706&Year=${year}&Month=${month}&Day=14&timeframe=1&submit= Download+Data" ;done;done
+```
+
+Note: to download the hourly data in UTC rather than LTC, please add &time=utc after format=csv in the wget statement
+
+Daily data interval:
+
+```bash
+for year in `seq 1998 2008`;do for month in `seq 1 1`;do wget --content-disposition "https://climate.weather.gc.ca/climate_data/bulk_data_e.html?format=csv&stationID=1706&Year=${year}&Month=${month}&Day=14&timeframe=2&submit= Download+Data" ;done;done
+```
+
+Monthly data interval (specific time period):
+
+```bash
+for year in `seq 1998 2008`;do for month in `seq 1 12`;do wget --content-disposition "https://climate.weather.gc.ca/climate_data/bulk_data_e.html?format=csv&stationID=1706&Year=${year}&Month=${month}&Day=14&timeframe=3&submit= Download+Data" ;done;done
+```
+
+Monthly data interval (station complete history):
+
+```bash
+for year in `seq 1998 2008`;do for month in `seq 1 1`;do wget --content-disposition "https://climate.weather.gc.ca/climate_data/bulk_data_e.html?format=csv&stationID=1706&Year=${year}&Month=${month}&Day=14&timeframe=3&submit= Download+Data" ;done;done
+```
