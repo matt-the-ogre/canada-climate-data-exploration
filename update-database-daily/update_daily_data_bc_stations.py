@@ -14,7 +14,7 @@ sys.path.append('../scripts')
 
 from import_stations import test_mysql_connection, test_engine_connection
 
-debug = True
+debug = False
 database_to_use = "mysql"
 
 def get_climate_id_for_station(conn_engine, station_id):
@@ -90,6 +90,7 @@ def get_most_recent_date(conn_engine, table_name):
         return (result)
 
 def update_daily_data_table(conn_engine, table_name, csv_file_path):
+    logging.info(f"Updating table {table_name} with data from {csv_file_path}")
     # Read the new CSV data
     df = pd.read_csv(csv_file_path)
     if database_to_use == "mysql":
@@ -166,6 +167,8 @@ def main():
         conn.close()
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.DEBUG)
-    # logging.basicConfig(level=logging.INFO)
+    if debug:
+        logging.basicConfig(level=logging.DEBUG)
+    else:
+        logging.basicConfig(level=logging.INFO)
     main()
