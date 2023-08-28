@@ -14,7 +14,7 @@ sys.path.append('../scripts')
 
 from import_stations import test_mysql_connection, test_engine_connection
 
-debug = False
+debug = True
 database_to_use = "mysql"
 
 def get_climate_id_for_station(conn_engine, station_id):
@@ -142,6 +142,7 @@ def main():
         host = os.environ.get('MYSQL_HOST')
         host_port = os.environ.get('MYSQL_PORT')
 
+        logging.debug(f"MYSQL_USER: {user}, MYSQL_PASSWORD: {password}, MYSQL_HOST: {host}, MYSQL_PORT: {host_port}")
         # assert that the credentials are not None
         assert user is not None, "MYSQL_USER environment variable not set"
         assert password is not None, "MYSQL_PASSWORD environment variable not set"
@@ -153,12 +154,20 @@ def main():
         
         # Using sqlalchemy
         connection_string = f"mysql+mysqlconnector://{user}:{password}@{host}:{host_port}/{database_name}"
-        engine = create_engine(connection_string)
-
-        if test_engine_connection(engine):
-            update_database_daily(engine)
-        else:
-            logging.error("Engine setup failed.")
+        logging.debug(f"Connection string: {connection_string}")
+        # engine = create_engine(connection_string)
+        try:
+            engine = create_engine(connection_string)
+            # assert test_mysql_connection(engine), "Engine setup failed."
+            # assert engine isn't None, "Engine setup failed."
+            assert engine is not None, "Engine setup failed."
+            
+            if test_engine_connection(engine):
+                update_database_daily(engine)
+            else:
+                logging.error("Engine setup failed.")
+        except Exception as e:
+            logging.error(f"Connection error: {e}")
         engine.dispose()
     elif database_to_use == "sqlite":
         # Connect to the SQLite database
@@ -167,8 +176,9 @@ def main():
         conn.close()
 
 if __name__ == "__main__":
+    logging_format = "%(asctime)s - %(levelname)s - %(message)s"
     if debug:
-        logging.basicConfig(level=logging.DEBUG)
+        logging.basicConfig(format=logging_format, level=logging.DEBUG)
     else:
-        logging.basicConfig(level=logging.INFO)
+        logging.basicConfig(format=logging_format, level=logging.INFO)
     main()

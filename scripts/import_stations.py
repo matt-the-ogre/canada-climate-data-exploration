@@ -115,6 +115,13 @@ def test_mysql_connection():
     host = os.environ.get('MYSQL_HOST')
     host_port = os.environ.get('MYSQL_PORT')
 
+    logging.debug(f"MYSQL_USER: {user}, MYSQL_PASSWORD: {password}, MYSQL_HOST: {host}, MYSQL_PORT: {host_port}")
+    # assert that the credentials are not None
+    assert user is not None, "MYSQL_USER environment variable not set"
+    assert password is not None, "MYSQL_PASSWORD environment variable not set"
+    assert host is not None, "MYSQL_HOST environment variable not set"
+    assert host_port is not None, "MYSQL_PORT environment variable not set"
+    
     # Database connection parameters
     database_name = "canada-climate"
     
