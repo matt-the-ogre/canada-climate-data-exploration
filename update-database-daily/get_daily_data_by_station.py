@@ -133,14 +133,18 @@ def main(args):
     timeframe = 2 # 1 = daily, 2 = daily, 3 = monthly
     month = 1 # doesn't matter for daily data
 
-    for year in range(first_year, last_year + 1):
-        download_station_data(station_id, year, month, timeframe)
+    if args.year == 0:
+        for year in range(first_year, last_year + 1):
+            download_station_data(station_id, year, month, timeframe)
+    else:
+        download_station_data(station_id, args.year, month, timeframe)
 
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Retrieve daily data years for a given station ID.")
     parser.add_argument('station_id', type=int, help="Station ID to look up")
     # parser.add_argument('--database_path', type=str, default='../data/database.db', help="Path to the SQLite database")
+    parser.add_argument('--year', type=int, default=0, help="Year to look up")
     return parser.parse_args()
 
 if __name__ == '__main__':
