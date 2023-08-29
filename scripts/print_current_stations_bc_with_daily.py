@@ -8,7 +8,7 @@ from datetime import datetime
 
 from import_stations import test_engine_connection
 
-def get_stations_with_current_data():
+def get_stations_with_current_daily_data():
     # returns a list of stations in BC with data for the current year
     # ----------------------------------------
     # Connect to the MySQL database
@@ -35,7 +35,7 @@ def get_stations_with_current_data():
     if test_engine_connection(engine):
         logging.debug("Engine is set up correctly.")
         table_name = 'stations'
-        field_name = 'Last Year'
+        field_name = 'DLY Last Year'
         return_field = 'Station ID'
         province = 'BRITISH COLUMBIA'
         current_year = datetime.now().year
@@ -75,7 +75,11 @@ def main(args):
         logging.basicConfig(level=logging.DEBUG)
     else:
         logging.basicConfig(level=logging.INFO)
-    return get_stations_with_current_data()
+    stations_with_current_daily_data = get_stations_with_current_daily_data()
+    assert stations_with_current_daily_data is not None, "No stations with current daily data found"
+    assert len(stations_with_current_daily_data) > 0, "No stations with current daily data found"
+    assert 53478 not in stations_with_current_daily_data, "Station 53478 should not be in the list"
+    return stations_with_current_daily_data
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Print all stations in BC with current data")

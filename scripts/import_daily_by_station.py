@@ -16,10 +16,16 @@ from sqlalchemy.exc import ProgrammingError
 from import_stations import test_mysql_connection, test_engine_connection
 import numpy as np
 
+import sys
+sys.path.append('../update-database-daily')
+
+from clean_daily_data import clean_daily_data
+
 logger = logging.getLogger(__name__)
 
-debug = False
-def import_csv_files(station_id):
+debug = True
+
+def import_csv_files(station_id, combined=False):
 
     # if not debug:
     #     # ----------------------------------------
@@ -77,7 +83,10 @@ def import_csv_files(station_id):
         directory_path = os.path.join("../data", str(station_id))
 
         # Pattern to match the CSV files
-        pattern = os.path.join(directory_path, "en_climate_daily_BC_*_P1D.csv")
+        if combined:
+            pattern = os.path.join(directory_path, "*_daily_combined.csv")
+        else:
+            pattern = os.path.join(directory_path, "en_climate_daily_BC_*_P1D.csv")
         assert len(glob.glob(pattern)) > 0, f"No files found for station {station_id}"
 
         # we're going to DROP the table if it exists, and then recreate it
@@ -85,7 +94,12 @@ def import_csv_files(station_id):
         # without violating the UNIQUE constraint on the Date/Time column
 
         file_name = glob.glob(pattern)[0]
-        climate_id = file_name.split('_')[4]
+        logging.debug(f"File name: {file_name}")
+        if combined:
+            climate_id = file_name.split('/')[-1].split('_')[0]
+            logging.debug(f"Climate ID: {climate_id}")
+        else:
+            climate_id = file_name.split('_')[4]
         assert climate_id is not None, f"Climate ID not found for station {station_id}"
 
         # Table name for the corresponding Climate ID
@@ -111,33 +125,77 @@ def import_csv_files(station_id):
         for file_path in glob.glob(pattern):
             # Extract Climate ID from the file name
             file_name = os.path.basename(file_path)
-            climate_id = file_name.split('_')[4]
+            # climate_id = file_name.split('_')[4]
+
+            # clean the data and make a backup csv file
+            clean_daily_data(file_path)
 
             # Read CSV file into a Pandas DataFrame
             df = pd.read_csv(file_path)
 
-            # Define the data type for the "Climate ID" column
+            #             #   Column                     Non-Null Count  Dtype  
+            # ---  ------                     --------------  -----  
+            #  0   Date/Time                  178 non-null    object 
+            #  1   Year                       178 non-null    int64  
+            #  2   Month                      178 non-null    int64  
+            #  3   Day                        178 non-null    int64  
+            #  4   Data Quality               178 non-null    object 
+            #  5   Max Temp (°C)              178 non-null    float64
+            #  6   Max Temp Flag              0 non-null      float64
+            #  7   Min Temp (°C)              178 non-null    float64
+            #  8   Min Temp Flag              0 non-null      float64
+            #  9   Mean Temp (°C)             178 non-null    float64
+            #  10  Mean Temp Flag             0 non-null      float64
+            #  11  Heat Deg Days (°C)         178 non-null    float64
+            #  12  Heat Deg Days Flag         0 non-null      float64
+            #  13  Cool Deg Days (°C)         178 non-null    float64
+            #  14  Cool Deg Days Flag         0 non-null      float64
+            #  15  Total Rain (mm)            178 non-null    float64
+            #  16  Total Rain Flag            7 non-null      object 
+            #  17  Total Snow (cm)            178 non-null    float64
+            #  18  Total Snow Flag            0 non-null      float64
+            #  19  Total Precip (mm)          178 non-null    float64
+            #  20  Total Precip Flag          7 non-null      object 
+            #  21  Snow on Grnd (cm)          178 non-null    float64
+            #  22  Snow on Grnd Flag          3 non-null      object 
+            #  23  Dir of Max Gust (10s deg)  0 non-null      float64
+            #  24  Dir of Max Gust Flag       0 non-null      float64
+            #  25  Spd of Max Gust (km/h)     0 non-null      float64
+            #  26  Spd of Max Gust Flag       0 non-null      float64
+
+            # Define the data type for the columns
+            # Note that we removed the flag columns in the clean function
             dtype = {
-                'Data Quality': types.VARCHAR(length=16),
-                'Max Temp Flag': types.VARCHAR(length=16),
-                'Min Temp Flag': types.VARCHAR(length=16),
-                'Mean Temp Flag': types.VARCHAR(length=16),
-                'Heat Deg Days Flag': types.VARCHAR(length=16),
-                'Cool Deg Days Flag': types.VARCHAR(length=16),
-                'Total Rain Flag': types.VARCHAR(length=16),
-                'Total Snow Flag': types.VARCHAR(length=16),
-                'Total Precip Flag': types.VARCHAR(length=16),
-                'Snow on Grnd Flag': types.VARCHAR(length=16),
-                'Dir of Max Gust Flag': types.VARCHAR(length=16),
-                'Spd of Max Gust Flag': types.VARCHAR(length=16),
-                'Spd of Max Gust (km/h)': types.VARCHAR(length=8)
+                'Data Quality': types.BOOLEAN,
+                'Max Temp (°C)': types.FLOAT,
+                # 'Max Temp Flag': types.VARCHAR(length=16),
+                'Min Temp (°C)': types.FLOAT,
+                # 'Min Temp Flag': types.VARCHAR(length=16),
+                'Mean Temp (°C)': types.FLOAT,
+                # 'Mean Temp Flag': types.VARCHAR(length=16),
+                'Heat Deg Days (°C)': types.FLOAT,
+                # 'Heat Deg Days Flag': types.VARCHAR(length=16),
+                'Cool Deg Days (°C)': types.FLOAT,
+                # 'Cool Deg Days Flag': types.VARCHAR(length=16),
+                'Total Rain (mm)': types.FLOAT,
+                # 'Total Rain Flag': types.VARCHAR(length=16),
+                'Total Snow (cm)': types.FLOAT,
+                # 'Total Snow Flag': types.VARCHAR(length=16),
+                'Total Precip (mm)': types.FLOAT,
+                # 'Total Precip Flag': types.VARCHAR(length=16),
+                'Snow on Grnd (cm)': types.FLOAT,
+                # 'Snow on Grnd Flag': types.VARCHAR(length=16),
+                'Dir of Max Gust (10s deg)': types.FLOAT,
+                # 'Dir of Max Gust Flag': types.VARCHAR(length=16),
+                # 'Spd of Max Gust Flag': types.VARCHAR(length=16),
+                'Spd of Max Gust (km/h)': types.FLOAT
             }
 
             df['Date/Time'] = pd.to_datetime(df['Date/Time'], format='%Y-%m-%d')
 
             # Import the DataFrame into the SQLite database, creating or appending to the table named after the Climate ID
             # Note: added chunksize=100 to avoid the error "payload string too large"
-            df.to_sql(table_name, con=engine, if_exists='append', index=True, chunksize=100, dtype=dtype)
+            df.to_sql(table_name, con=engine, if_exists='append', index=False, chunksize=100, dtype=dtype)
             # df.to_sql('stations', con=engine, index=False, if_exists='replace', chunksize=100)
 
             # logging.debug(f"Imported '{file_path}' into table '{table_name}'.")
