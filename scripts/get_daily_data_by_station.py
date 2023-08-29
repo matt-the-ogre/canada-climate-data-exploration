@@ -94,10 +94,8 @@ def get_daily_data_years(station_id):
         logging.error("Engine setup failed.")
     # ----------------------------------------
 
-def download_station_data(station_id, year, month, timeframe):
+def download_station_data(station_id, year, month, timeframe, climate_id):
     # check if we have already downloaded the CSV file for this station, year, month, and timeframe
-    climate_id = get_climate_id_for_station(station_id)
-    logging.info(f"Climate ID: {climate_id}")
     filename = f"en_climate_daily_BC_{climate_id}_{year}_P1D.csv"
     directory_path = os.path.join("../data", str(station_id))
     file_path = os.path.join(directory_path, filename)
@@ -153,8 +151,11 @@ def download_all_station_data(station_id, debug=False):
     timeframe = 2 # 1 = hourly, 2 = daily, 3 = monthly
     month = 12 # doesn't matter for daily data
 
+    climate_id = get_climate_id_for_station(station_id)
+    logging.info(f"Climate ID: {climate_id}")
+
     for year in range(first_year, last_year + 1):
-        download_station_data(station_id, year, month, timeframe)
+        download_station_data(station_id, year, month, timeframe, climate_id)
 
 def main(args):
     if args.debug:

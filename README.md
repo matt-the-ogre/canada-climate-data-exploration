@@ -85,3 +85,9 @@ The TC ID is the identifier assigned by Transport Canada to identify meteorologi
 World Meteorological Organization Identifier (WMO ID)
 
 A 5-digit number permanently assigned to Canadian stations by the World Meteorological Organization to identify the station internationally. The WMO ID is an international identifier assigned by the Meteorological Service of Canada to standards of the World Meteorological Organization for stations that transmit observations in international meteorological formats in real time.
+
+## Thoughts on performance
+
+I should set up the local sqlite database again just for the stations data. Then the station_id to climate_id lookup would be much faster and I wouldn't have to query the cloud database for that.
+
+I should also look up the climate_id from the station_id once per station and pass it as a parameter into any repetitive function to avoid the lookup in the inner loop.
