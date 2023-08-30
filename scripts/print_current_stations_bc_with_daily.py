@@ -6,7 +6,10 @@ from sqlalchemy import create_engine
 from sqlalchemy import text
 from datetime import datetime
 
-from import_stations import test_engine_connection
+# from import_stations import test_engine_connection
+import sys
+sys.path.append('../common')  # Add common directory to Python path
+from utils import test_engine_connection
 
 def get_stations_with_current_daily_data():
     # returns a list of stations in BC with data for the current year

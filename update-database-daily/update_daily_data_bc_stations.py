@@ -10,10 +10,13 @@ from datetime import datetime
 
 from get_daily_data_by_station import download_station_data
 
-import sys
-sys.path.append('../scripts')
+# import sys
+# sys.path.append('../scripts')
 
-from import_stations import test_mysql_connection, test_engine_connection
+# from import_stations import test_mysql_connection, test_engine_connection
+import sys
+sys.path.append('../common')  # Add common directory to Python path
+from utils import test_engine_connection
 
 debug = False
 database_to_use = "mysql"

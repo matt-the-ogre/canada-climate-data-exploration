@@ -7,10 +7,13 @@ import requests
 from sqlalchemy import create_engine
 from sqlalchemy import text
 
-import sys
-sys.path.append('../scripts')
+# import sys
+# sys.path.append('../scripts')
 
-from import_stations import test_mysql_connection, test_engine_connection
+# from import_stations import test_mysql_connection, test_engine_connection
+import sys
+sys.path.append('../common')  # Add common directory to Python path
+from utils import test_engine_connection
 
 # This program takes a station_id and downloads all the available daily data for that station_id
 # It uses the database to determine the first and last years available for the station_id

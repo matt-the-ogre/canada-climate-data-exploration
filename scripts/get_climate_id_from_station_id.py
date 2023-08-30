@@ -4,7 +4,10 @@ import os
 from sqlalchemy import create_engine
 from sqlalchemy import text
 
-from import_stations import test_engine_connection
+# from import_stations import test_engine_connection
+import sys
+sys.path.append('../common')  # Add common directory to Python path
+from utils import test_engine_connection
 
 def get_climate_id_for_station(station_id):
     # ----------------------------------------

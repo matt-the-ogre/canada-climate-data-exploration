@@ -11,6 +11,9 @@ from sqlalchemy import text
 import sqlalchemy
 from sqlalchemy.exc import ProgrammingError
 
+import sys
+sys.path.append('../common')  # Add common directory to Python path
+from utils import test_engine_connection
 
 # Function to download the stations file
 def download_stations_file(url, directory='../data'):
@@ -96,17 +99,6 @@ def convert_zero_to_null2(engine):
     except Exception as e:
         logging.error(f"Error: {str(e)}")
 
-def test_engine_connection(engine):
-    # This is for the MySQL database
-    try:
-        with engine.connect() as connection:
-            result = connection.execute(text("SELECT VERSION()"))
-            version = result.scalar()
-            logging.debug(f"MySQL version: {version}")
-            return True
-    except Exception as e:
-        logging.error(f"Connection error: {str(e)}")
-        return False
 
 def test_mysql_connection():
     # Get credentials from environment variables

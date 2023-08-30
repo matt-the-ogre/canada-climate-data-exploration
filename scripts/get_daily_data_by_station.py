@@ -8,7 +8,10 @@ import time
 from sqlalchemy import create_engine
 from sqlalchemy import text
 
-from import_stations import test_engine_connection
+# from import_stations import test_engine_connection
+import sys
+sys.path.append('../common')  # Add common directory to Python path
+from utils import test_engine_connection
 from get_climate_id_from_station_id import get_climate_id_for_station
 
 def get_daily_data_years_sqlite(database_path, station_id):

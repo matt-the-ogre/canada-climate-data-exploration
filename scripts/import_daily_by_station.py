@@ -13,7 +13,10 @@ from sqlalchemy import text
 import sqlalchemy
 import sqlalchemy.types as types
 from sqlalchemy.exc import ProgrammingError
-from import_stations import test_mysql_connection, test_engine_connection
+# from import_stations import test_mysql_connection, test_engine_connection
+import sys
+sys.path.append('../common')  # Add common directory to Python path
+from utils import test_engine_connection
 import numpy as np
 
 import sys
