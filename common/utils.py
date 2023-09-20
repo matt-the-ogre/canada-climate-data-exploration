@@ -26,3 +26,21 @@ def test_engine_connection(engine):
     except Exception as e:
         logging.error(f"Connection error: {str(e)}")
         return False
+
+def province_to_initials(province_name):
+    mapping = {
+        "BRITISH COLUMBIA": "BC",
+        "ALBERTA": "AB",
+        "SASKATCHEWAN": "SK",
+        "MANITOBA": "MB",
+        "ONTARIO": "ON",
+        "QUEBEC": "QC",
+        "NEW BRUNSWICK": "NB",
+        "PRINCE EDWARD ISLAND": "PE",
+        "NOVA SCOTIA": "NS",
+        "NEWFOUNDLAND AND LABRADOR": "NL",
+        "YUKON": "YT",
+        "NORTHWEST TERRITORIES": "NT",
+        "NUNAVUT": "NU"
+    }
+    return mapping.get(province_name.upper(), "Unknown")

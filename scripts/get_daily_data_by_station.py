@@ -12,7 +12,29 @@ from sqlalchemy import text
 import sys
 sys.path.append('../common')  # Add common directory to Python path
 from utils import test_engine_connection
+# from utils import province_to_initials
+
 from get_climate_id_from_station_id import get_climate_id_for_station
+
+def province_to_initials(province_name):
+    mapping = {
+        "BRITISH COLUMBIA": "BC",
+        "ALBERTA": "AB",
+        "SASKATCHEWAN": "SK",
+        "MANITOBA": "MB",
+        "ONTARIO": "ON",
+        "QUEBEC": "QC",
+        "NEW BRUNSWICK": "NB",
+        "PRINCE EDWARD ISLAND": "PE",
+        "NOVA SCOTIA": "NS",
+        "NEWFOUNDLAND AND LABRADOR": "NL",
+        "YUKON": "YT",
+        "YUKON TERRITORY": "YT",
+        "NORTHWEST TERRITORIES": "NT",
+        "NUNAVUT": "NU"
+    }
+    return mapping.get(province_name.upper(), "Unknown")
+
 
 def get_daily_data_years_sqlite(database_path, station_id):
     # Check if the database file is present
@@ -97,9 +119,11 @@ def get_daily_data_years(station_id):
         logging.error("Engine setup failed.")
     # ----------------------------------------
 
-def download_station_data(station_id, year, month, timeframe, climate_id):
+def download_station_data(station_id, year, month, timeframe, climate_id, prov):
     # check if we have already downloaded the CSV file for this station, year, month, and timeframe
-    filename = f"en_climate_daily_BC_{climate_id}_{year}_P1D.csv"
+    filename = f"en_climate_daily_{prov}_{climate_id}_{year}_P1D.csv"
+    # TODO change above to account for other provinces. I'll have to send the province as a parameter to this function
+    # question is should I send it as the abbreviation or as the full name and case statement it here?
     directory_path = os.path.join("../data", str(station_id))
     file_path = os.path.join(directory_path, filename)
     if os.path.exists(file_path):
@@ -144,12 +168,15 @@ def download_all_station_data(station_id, debug=False):
     
     assert first_year != 0, f"Error: no daily data available for station {station_id} ({name}, {province})."  
     assert last_year != 0, f"Error: no daily data available for station {station_id} ({name}, {province})."
-    assert province == "BRITISH COLUMBIA", f"Error: no daily data available for station {station_id} ({name}, {province})."
+    # assert province == "BRITISH COLUMBIA", f"Error: no daily data available for station {station_id} ({name}, {province})."
 
     if first_year == 0 or last_year == 0:
         logging.error(f"Error: no daily data available for station {station_id} ({name}, {province}).")
         return
     
+    province_initials = province_to_initials(province)
+    logging.debug(f"{province} maps to {province_initials}")
+
     # Example usage
     timeframe = 2 # 1 = hourly, 2 = daily, 3 = monthly
     month = 12 # doesn't matter for daily data
@@ -158,7 +185,7 @@ def download_all_station_data(station_id, debug=False):
     logging.info(f"Climate ID: {climate_id}")
 
     for year in range(first_year, last_year + 1):
-        download_station_data(station_id, year, month, timeframe, climate_id)
+        download_station_data(station_id, year, month, timeframe, climate_id, province_initials)
 
 def main(args):
     if args.debug:

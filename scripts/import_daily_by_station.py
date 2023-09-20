@@ -39,7 +39,7 @@ def import_csv_files(station_id, combined=False):
     #     directory_path = os.path.join("../data", str(station_id))
 
     #     # Pattern to match the CSV files
-    #     pattern = os.path.join(directory_path, "en_climate_daily_BC_*_P1D.csv")
+    #     pattern = os.path.join(directory_path, "en_climate_daily_*_P1D.csv")
 
     #     # Iterate over all matching CSV files
     #     for file_path in glob.glob(pattern):
@@ -89,7 +89,7 @@ def import_csv_files(station_id, combined=False):
         if combined:
             pattern = os.path.join(directory_path, "*_daily_combined.csv")
         else:
-            pattern = os.path.join(directory_path, "en_climate_daily_BC_*_P1D.csv")
+            pattern = os.path.join(directory_path, "en_climate_daily_*_P1D.csv")
         assert len(glob.glob(pattern)) > 0, f"No files found for station {station_id}"
 
         # we're going to DROP the table if it exists, and then recreate it

@@ -13,7 +13,7 @@ def concatenate_csv_files(station_id):
 
     # Pattern to match the CSV files
 
-    pattern = os.path.join(directory_path, "en_climate_daily_BC_*_P1D.csv")
+    pattern = os.path.join(directory_path, "en_climate_daily_*_P1D.csv")
     assert len(glob.glob(pattern)) > 0, f"No files found for station {station_id}"
 
     climate_id = glob.glob(pattern)[0].split('_')[4]
@@ -26,7 +26,7 @@ def concatenate_csv_files(station_id):
         return
 
     # List all the CSV files in the directory
-    csv_files = [f for f in os.listdir(directory) if f.startswith("en_climate_daily_BC_") and f.endswith("_P1D.csv")]
+    csv_files = [f for f in os.listdir(directory) if f.startswith("en_climate_daily_") and f.endswith("_P1D.csv")]
     
     # Check if there are any matching CSV files
     if len(csv_files) == 0:
