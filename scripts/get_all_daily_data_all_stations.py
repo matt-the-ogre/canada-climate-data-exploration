@@ -10,7 +10,7 @@ from combine_daily_data_by_station import concatenate_csv_files
 from get_daily_data_by_station import download_all_station_data
 
 # This script assumes all the CSV files are current and downloaded
-# It will import all the CSV files for all the stations in BC into the database
+# It will import all the CSV files for all the stations in BC into the database <-- is this still true? I think this comment came from another file
 
 def main(args):
     debug = args.debug
@@ -19,10 +19,10 @@ def main(args):
     else:
         logging.basicConfig(level=logging.INFO)
     
-    # get the list of stations in BC with current data (up to the current year)
+    # get the list of stations in BC (?) with current data (up to the current year)
     st = time.process_time()
 
-    full_stations_list = get_stations_with_current_daily_data()
+    full_stations_list = get_stations_with_current_daily_data() # <-- this function is in print_current_stations_all_with_daily.py
 
     et = time.process_time()
     logging.info(f"Time to get stations with current data: {et - st} seconds")
@@ -35,7 +35,7 @@ def main(args):
         logging.info(f"Processing station {station} ({index+1}/{total_stations})")
         logging.debug(f"Station: {station}")
         st = time.process_time()
-        download_all_station_data(station, debug=True)
+        download_all_station_data(station, debug=True) # <-- this function is in get_daily_data_by_station.py
         et = time.process_time()
         logging.info(f"Time to download CSV files for station {station}: {et - st} seconds")
 

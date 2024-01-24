@@ -15,6 +15,8 @@ import sys
 sys.path.append('../common')  # Add common directory to Python path
 from utils import test_engine_connection
 
+# Usage: python import_stations.py
+
 # Function to download the stations file
 def download_stations_file(url, directory='../data'):
     # Ensure the directory exists

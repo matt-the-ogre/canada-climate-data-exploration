@@ -14,7 +14,8 @@ database_name = "canada-climate"
 
 logging.basicConfig(level=logging.DEBUG)
 logging.info(f"Connecting to {database_name} at {host}...")
-logging.info(f"Using user '{user}' and password '{password}'")
+logging.info(f"Using user '{user}'")
+logging.debug(f"Using password '{password}'")
 logging.info(f"Using port {host_port}")
 
 try:

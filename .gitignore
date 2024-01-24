@@ -8,3 +8,5 @@ __cache*
 /update-database-daily/last_update_time.txt
 update-database-daily/last_update_time.txt
 update-database-daily/last_update_time.txt
+Readme.pdf
+*.csv
