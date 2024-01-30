@@ -143,6 +143,12 @@ curl -OJL "https://api.weather.gc.ca/collections/climate-daily/items?datetime=18
 
 Interesting! It downloaded a file called `climate-daily.csv` with a different format than the other site.
 
+Here's another link with `CLIMATE_IDENTIFIER` instead of `STN_ID`:
+
+`https://api.weather.gc.ca/collections/climate-daily/items?datetime=1840-03-01%2000:00:00/2024-01-24%2000:00:00&CLIMATE_IDENTIFIER=1026271&sortby=PROVINCE_CODE,CLIMATE_IDENTIFIER,LOCAL_DATE&f=csv&limit=10000&offset=0`
+
+Changed `startindex` to `offset` too.
+
 ### More new interesting stuff
 
 There are directories full of CSV files available for download here:
@@ -160,6 +166,7 @@ wget -r -l1 -N -A.csv -np -erobots=off https://dd.weather.gc.ca/climate/observat
 ```
 
 What this does:
+
 - `-r` and `-l1`: As before, it's recursive but only one level deep.
 - `-N`: Timestamping. `wget` will check the timestamp of the remote file against the local file and only download if the remote file is newer.
 - `-A.csv`: Still focusing only on `.csv` files.
@@ -167,3 +174,111 @@ What this does:
 - `-erobots=off`: Ignores robots.txt (same caution applies about compliance with site policies).
 
 This way, each time you run this command, it will only download files that have been updated since your last download.
+
+Ah, I see. If the `wget` command is downloading the HTML instead of the individual files, it's likely because the files are listed on an HTML page rather than being available directly in the directory structure. To download all the `.csv` files linked from that page, you'll want to modify the command slightly:
+
+```bash
+wget -r -l1 -H -nd -N -A.csv -np -e robots=off -Ddd.weather.gc.ca https://dd.weather.gc.ca/climate/observations/daily/csv/BC/
+```
+
+Here's what's changed:
+
+- `-r`: Recursive download.
+- `-l1`: Depth of 1 level.
+- `-H`: Span hosts, since the files might be located on a different host.
+- `-nd`: Download files to the current directory.
+- `-N`: Timestamping.
+- `-A.csv`: Accept only `.csv` files.
+- `-np`: Do not follow links to parent directories.
+- `-e robots=off`: Ignore `robots.txt`.
+- `-Ddd.weather.gc.ca`: Restrict the download to the specified domain (`dd.weather.gc.ca` in this case).
+
+This should download all the `.csv` files linked on that page. Just make sure to adjust the domain (`-D`) option if the files are hosted on a different domain.
+
+Neither of the above worked.
+
+It did download the HTML file for that page. I suppose I just need to format and extract all the filenames from there and try that?
+
+More:
+
+To bulk download files from a Web Accessible Folder (WAF) on your Mac, you can use command-line tools like `wget` or `curl`. Since `wget` isn't installed by default on macOS, you might prefer using `curl`, which is included in macOS. However, if you're comfortable installing new software, `wget` can be more convenient for this task.
+
+### Using `wget`:
+
+If you decide to use `wget`, you can install it via Homebrew:
+
+1. Install Homebrew if you haven't already: `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`
+2. Install `wget`: `brew install wget`
+
+Then, use a command similar to:
+
+```bash
+wget -r -np -nH --cut-dirs=1 -A 'pattern*' http://example.com/directory/
+wget -r -np -nH --cut-dirs=1 -A '*.csv' https://dd.weather.gc.ca/climate/observations/daily/csv/BC/
+```
+
+- `-r`: Recursive download
+- `-np`: Don't ascend to the parent directory
+- `-nH`: Disable generation of host-prefixed directories
+- `--cut-dirs=1`: Ignore certain directory components (this number varies based on URL structure)
+- `-A 'pattern*'`: Download files with a specific pattern (e.g., `.csv`, `.jpg`)
+
+Replace `pattern*` with the file type you want to download (like `*.csv`) and `http://example.com/directory/` with your WAF URL.
+
+### Using `curl`:
+
+If you prefer `curl`, which is more manual and works well for downloading specific files:
+
+1. Create a text file (`filelist.txt`) that contains all the URLs of the files you want to download.
+2. Use a command like:
+
+```bash
+xargs -n 1 curl -O < filelist.txt
+```
+
+This reads each URL from `filelist.txt` and uses `curl` to download it.
+
+To split a large file into smaller files with a specific number of lines each, you can use the `split` command on your Mac. For your case, where you want to split a file into chunks of 1000 lines, the command would look like this:
+
+```bash
+split -l 1000 output.txt split_
+```
+
+Here's what this does:
+
+- `-l 1000`: Specifies the number of lines per output file.
+- `yourfile.txt`: The name of your large file.
+- `newfile_`: The prefix for the output files. The command will create files named `newfile_aa`, `newfile_ab`, `newfile_ac`, and so on.
+
+After running this command, you'll have multiple files each containing 1000 lines from the original file.
+
+Yes, Matt, you can add a pause in the `xargs` command for `curl`. One way to do this is by using the `sleep` command in a shell script. Here's how you can modify the `xargs` command to include a pause:
+
+```bash
+xargs -n 1 -I {} sh -c 'curl -O "{}"; sleep 1' < ../split_aa
+```
+
+In this command:
+
+- `-n 1`: This tells `xargs` to use one line at a time from `filelist.txt`.
+- `-I {}`: This replaces `{}` with the line from `filelist.txt`.
+- `sh -c`: Executes the given command in the shell.
+- `curl -O "{}"`: Downloads the file from the URL.
+- `sleep 1`: Pauses for 1 second after each download.
+
+You can adjust the `sleep 1` part to increase or decrease the pause duration as needed (it's in seconds). For example, `sleep 2` would pause for 2 seconds between each download.
+
+## Updated data downloading steps
+
+1. download HTML page for each province
+1. clean that html to extract just the links to the CSV files referenced
+1. Add the prefix (URL) to all those links to prepare it for curl to download them
+1. split the file into sub-files with 1000 lines each. This is to prepare to download the files and I don't trust more than 1000 files per directory
+1. run the xargs command with curl with each filelist as input
+1. Profit
+
+mkdir ae
+cd ae
+xargs -n 1 curl -O < ../split_ae
+
+Just did a quick read on number of files in a directory on MacOS and it said 2.1 billion. So we might be okay.
